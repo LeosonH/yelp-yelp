@@ -1,6 +1,5 @@
 ## Welcome to the repository for [We Like Food]'s CMSC 12300 project! 
-<br>
-<br>
+
 **Drawing Insights from the Yelp Academic Dataset**
 <br>
 <br>
