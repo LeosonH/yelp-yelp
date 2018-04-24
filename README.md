@@ -12,5 +12,6 @@ Awesome Members:
 <br>
 <br>
 ### Log:
+<br>
 - Added Proposal (05/17/2018)
 
