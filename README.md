@@ -11,6 +11,5 @@ Awesome Members:
 * [Leoson Hoay]("https://github.com/LeosonH")
 
 ### Log:
-<br>
-- Added Proposal (05/17/2018)
+* 5/17/2018: Added Proposal 
 
