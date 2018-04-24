@@ -9,8 +9,7 @@ Awesome Members:
 * [Alex Maiorella]("https://github.com/donkeyteethUX")
 * [Yuqian Gong (Nancy)]("https://github.com/yuqian919")
 * [Leoson Hoay]("https://github.com/LeosonH")
-<br>
-<br>
+
 ### Log:
 <br>
 - Added Proposal (05/17/2018)
