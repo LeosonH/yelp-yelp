@@ -5,10 +5,10 @@
 <br>
 
 Awesome Members:
-* [Lily Li]("https://github.com/mouyun-lily-li")
-* [Alex Maiorella]("https://github.com/donkeyteethUX")
-* [Yuqian Gong (Nancy)]("https://github.com/yuqian919")
-* [Leoson Hoay]("https://github.com/LeosonH")
+* [Lily Li](https://github.com/mouyun-lily-li)
+* [Alex Maiorella](https://github.com/donkeyteethUX)
+* [Yuqian Gong (Nancy)](https://github.com/yuqian919)
+* [Leoson Hoay](https://github.com/LeosonH)
 
 ### Log:
 * 5/17/2018: Added Proposal 
