@@ -11,5 +11,7 @@ Awesome Members:
 * [Leoson Hoay](https://github.com/LeosonH)
 
 ### Log:
-* 5/17/2018: Added Proposal 
+* 5/3/2018: Added json to csv conversion script
+* 4/24/2018: Added some sandbox code
+* 4/17/2018: Added Proposal 
 
