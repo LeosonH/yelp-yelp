@@ -10,8 +10,8 @@ Awesome Members:
 * [Yuqian Gong (Nancy)](https://github.com/yuqian919)
 * [Leoson Hoay](https://github.com/LeosonH)
 
-### Using the JSON to CSV convertor:
-* python json_to_csv_converter_py3.py filename
+### Using the JSON to CSV converter:
+* `python json_to_csv_converter_py3.py filename`
 * May need to install required packages
 
 ### Log:
