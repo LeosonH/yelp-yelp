@@ -12,8 +12,8 @@ import simplejson as json
 
 def read_and_write_file(json_file_path, csv_file_path, column_names):
     """Read in the json dataset file and write it out to a csv file, given the column names."""
-    # changed arg to 'w' for Python 3 compatibility
-    with open(csv_file_path, 'w') as fout:
+    # changed arg to 'w' for Python 3 compatibility, added encoding
+    with open(csv_file_path, 'w', encoding = 'utf8') as fout:
         csv_file = csv.writer(fout)
         csv_file.writerow(list(column_names))
         # added encoding
@@ -99,7 +99,8 @@ def get_row(line_contents, column_names):
                         )
         # changed unicode to 'str' for Python 3 compatibility
         if isinstance(line_value, str):
-            row.append('{0}'.format(line_value.encode('utf-8')))
+        	# removed .encode method
+            row.append('{0}'.format(line_value))
         elif line_value is not None:
             row.append('{0}'.format(line_value))
         else:
