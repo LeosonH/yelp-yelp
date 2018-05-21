@@ -28,6 +28,7 @@ class create_base_vector(MRJob):
         self.l.append(list(doc))
         for i in self.l:
         	dictionary.add_documents(i)
+        # replace directory path with your own
         dictionary.save("C:/Users/leoso/Desktop/Uchicago Year 1/Spring/git/yelp-yelp/base_vector.dict")
     
     
