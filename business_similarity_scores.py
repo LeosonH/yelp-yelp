@@ -113,5 +113,5 @@ def go(path):
 
 
 if __name__ == "__main__":
-    output_df = go("C:/Users/alex/Desktop/yelp_data/yelp-dataset/")
+    output_df = go("data/")
     output_df.to_csv('data/yelp_business_similarity_scores_sample.csv', index = False)
