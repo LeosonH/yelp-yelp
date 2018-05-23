@@ -14,8 +14,10 @@ class create_corpus(MRJob):
     def mapper(self, _, line):
         doc = []
         vec = []
-        if len(re.findall('.*text$', line)) == 0 and not re.match(r'^\s*$', line):
-            doc = re.sub("[^\\w\\s]", "", line)
+        review_list = line.split(',')
+        review_text = review_list[-1]
+        if len(re.findall('.*text$', review_text)) == 0 and not re.match(r'^\s*$', review_text):
+            doc = re.sub("[^\\w\\s]", "", review_text)
             doc = re.sub(r"\b\d+\b","", doc)
             doc = doc.lower().split()
             doc = [x for x in doc if x not in stopw]
