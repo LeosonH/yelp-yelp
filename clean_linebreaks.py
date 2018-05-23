@@ -8,14 +8,13 @@ def clean_csv(old_path, new_path):
 
 	with open(old_path, 'r', encoding = 'utf-8') as csvfile:
 		with open(new_path, 'w', encoding='utf-8') as csvfile2:
-			 reader = csv.reader(csvfile)
-        	writer = csv.writer(csvfile2)
-        	for row in reader:
-            	stripped = row[-1].replace('\n', '')
-            	to_write = row[:-1]
-            	to_write.append(stripped) 
-            	print(to_write)
-            	writer.writerow(to_write)
+			reader = csv.reader(csvfile)
+			writer = csv.writer(csvfile2)
+			for row in reader:
+				stripped = row[-1].replace('\n', '')
+				to_write = row[:-1]
+				to_write.append(stripped) 
+				writer.writerow(to_write)
 
 if __name__ == '__main__':
 
