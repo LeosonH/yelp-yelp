@@ -45,11 +45,11 @@ def calculate_haversine_distance(lon1, lat1, lon2, lat2):
 
 def calculate_stars_sim(rating1, rating2):
     """
-    Calculate the star rating similarity in miles between two businesses
+    Calculate the star rating similarity between two businesses
         as a percentage. 100% is having the same average star rating
     """
     MAX_STARS = 5
-    return ((5 - abs(rating1 - rating2)) / 5) * 100
+    return (MAX_STARS - abs(rating1 - rating2)) / MAX_STARS
 
 
 # def calculate_category_sim(categories1, categories2):
@@ -100,13 +100,12 @@ def go(path):
                 hours_overlap = hours_overlap(row1[0], row2[0])
                 distance = calculate_haversine_distance(row1[3], row1[2], row2[3], row2[2])
                 stars_sim = calculate_stars_sim(row1[4], row2[4])
-                review_count_sim = abs(row1[5] - row2[5]) / min(row1[5], row2[5])
+                review_count_sim = (min(row1[5], row2[5]) - abs(row1[5] - row2[5])) / min(row1[5], row2[5])
                 categories1 = row1[6].split(';')
                 categories2 = row2[6].split(';')
                 category_sim = (len(set(categories1).intersection(set(categories2))) \
-                    / (len(categories1) + len(categories2))) + 1
-                # added 1 to deal with scores of 0 turning sim score into 0
-                sim_score = (1 / distance) * stars_sim * review_count_sim * category_sim * hours_overlap
+                    / (len(categories1) + len(categories2)))
+                sim_score = (1 / (distance + 1)) * hours_overlap * (stars_sim + review_count_sim + category_sim)
                 rows_list.append({'business_id1': row1[1],
                     'business_id2': row2[1], 'similarity': sim_score})
 
@@ -114,5 +113,5 @@ def go(path):
 
 
 if __name__ == "__main__":
-    output_df = go("C:/Users/alex/Desktop/yelp_data/yelp-dataset/")
+    output_df = go("data/")
     output_df.to_csv('data/yelp_business_similarity_scores_sample.csv', index = False)
