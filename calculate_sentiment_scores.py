@@ -2,6 +2,7 @@
 # Calculate NLTK scores for each review
 # Lily Li
 
+# python3 calculate_sentiment_scores.py data/subset.csv > data.txt
 
 from mrjob.job import MRJob
 from mrjob import protocol
@@ -14,7 +15,6 @@ class MRSentimentScores(MRJob):
     Class for MapReduce work.
     '''
     OUTPUT_PROTOCOL = protocol.TextProtocol
-    sia = SentimentIntensityAnalyzer()
 
 
     def mapper(self, _, line):
@@ -31,9 +31,9 @@ class MRSentimentScores(MRJob):
             A key value pair of the business id and the review's sentiment score
         '''
         business = next(csv.reader([line]))
-        business_id = business[2]
+        business_id = business[0]
         text = business[5]
-        yield business_id, sia.polarity_scores(text)['compound']
+        yield business[0], self.sia.polarity_scores(text)['compound']
 
 
 if __name__ == '__main__':
