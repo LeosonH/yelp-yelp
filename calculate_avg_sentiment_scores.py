@@ -15,24 +15,27 @@ class MRAverageSentimentScores(MRJob):
     '''
     OUTPUT_PROTOCOL = protocol.TextProtocol
 
+    def mapper_init(self):
+        self.sia = SentimentIntensityAnalyzer()
+
 
     def mapper(self, _, line):
         '''
-        Mapper function. Takes in a row from the csv file and extracts the 
-        business id and review sentiment score.
+        Mapper function. Takes in a row from the csv file and calculates the
+        sentiment score for the review.
 
         Inputs:
-            self: an instance of the MRAverageSentimentScores class
+            self: an instance of the MRSentimentScores class
             _: a dummy placeholder for the key of the pair
             line (str): a row from the csv file
 
         Yield:
             A key value pair of the business id and the review's sentiment score
         '''
-        row = next(csv.reader([line]))
-        business_id = row[0]
-        score = row[1]
-        yield business_id, score
+        business = next(csv.reader([line]))
+        business_id = business[0]
+        text = business[5]
+        yield business[0], self.sia.polarity_scores(text)['compound']
 
 
     def combiner(self, business_id, scores):
@@ -56,7 +59,7 @@ class MRAverageSentimentScores(MRJob):
             total += score
             count += 1
 
-        yield name, (total, count)
+        yield business_id, (total, count)
 
 
     def reducer(self, business_id, totals_and_counts):
@@ -67,7 +70,9 @@ class MRAverageSentimentScores(MRJob):
             totals += total
             counts += count
 
-        yield business_id, totals/counts
+        avg_score = totals/counts
+
+        yield business_id, str((avg_score + 1) / 2)
 
 
 if __name__ == '__main__':

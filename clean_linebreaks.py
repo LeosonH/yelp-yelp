@@ -11,8 +11,8 @@ def clean_csv(old_path, new_path):
 			reader = csv.reader(csvfile)
 			writer = csv.writer(csvfile2)
 			for row in reader:
-				stripped = row[-1].replace('\n', '')
-				to_write = row[:-1]
+				stripped = row[-4].replace('\n', ' ')
+				to_write = row[:-4]
 				to_write.append(stripped) 
 				writer.writerow(to_write)
 
