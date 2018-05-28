@@ -72,7 +72,7 @@ class MRAverageSentimentScores(MRJob):
 
         # avg_score = totals/counts
 
-        yield business_id, totals/counts
+        yield business_id, str(totals/counts)
 
 
 if __name__ == '__main__':
