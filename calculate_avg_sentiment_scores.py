@@ -33,15 +33,15 @@ class MRAverageSentimentScores(MRJob):
         Yield:
             A key value pair of the business id and the review's sentiment score
         '''
-        business = next(csv.reader([line]))
-        business_id = business[0]
-        text = business[5]
+        review = next(csv.reader([line]))
+        business_id = review[2]
+        text = review[5]
         yield business_id, self.sia.polarity_scores(text)['compound']
 
 
     def combiner(self, business_id, scores):
         '''
-        Combiner function. Takes in key value pairs of a business id and 
+        Combiner function. Takes in key value pairs of a business id and
         scores for that business and yields the sum and count of scores.
 
         Inputs:
