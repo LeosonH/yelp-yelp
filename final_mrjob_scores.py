@@ -10,6 +10,11 @@
 #-------------------------------------------------------------------------------
 
 # Similarity Score mapreduce code
+from mrjob.job import MRJob
+from mrjob import protocol
+import csv
+from math import radians, cos, sin, asin, sqrt
+import re
 
 class MRScores(MRJob):
     '''
@@ -18,10 +23,10 @@ class MRScores(MRJob):
     OUTPUT_PROTOCOL = protocol.TextProtocol
 
     def configure_options(self):
-        super(MRSimilarityScores, self).configure_options()
-        self.add_file_option('--', help='path to master.csv')
+        super(MRScores, self).configure_options()
+        self.add_file_option('--master', help='path to master.csv')
 
-    def calculate_haversine_distance(lon1, lat1, lon2, lat2):
+    def calculate_haversine_distance(self, lon1, lat1, lon2, lat2):
         """
         Calculate the haversine distance in miles between two businesses
         """
@@ -36,11 +41,11 @@ class MRScores(MRJob):
         r = 3956 # radius of earth in miles
         return c * r
 
-    def format_hours(input_hours):
+    def format_hours(self, input_hours):
 
         hours = []
         for i in input_hours:
-            if i:
+            if re.match(".+:.+", i):
                 start, end = i.split("-")
                 start_hrs_mins = re.match("([0-9]*):?([0-9]*)", start)
                 start_frac = int(start_hrs_mins.group(2)) / 60
@@ -53,10 +58,10 @@ class MRScores(MRJob):
                 hours.append((0,0))
         return hours
 
-    def hours_overlap(hours1, hours2):
+    def hours_overlap(self, hours1, hours2):
 
-        h1 = format_hours(hours1)
-        h2 = format_hours(hours2)
+        h1 = self.format_hours(hours1)
+        h2 = self.format_hours(hours2)
 
         overlap = 0
         h1_hours = 0
@@ -83,36 +88,40 @@ class MRScores(MRJob):
 
         '''
         bus1 = next(csv.reader([line]))
-        # first file to be processed must be "main" file (i.e. not a file in add_file_option())
         business_id1 = bus1[0]
-        lat1 = bus1[7]
-        lon1 = bus1[8]
-        stars1 = bus1[9]
-        rev_count1 = bus1[10]
+        lat1 = float(bus1[7])
+        lon1 = float(bus1[8])
+        stars1 = float(bus1[9])
+        rev_count1 = int(bus1[10])
         categories1 = bus1[12]
         hours1 = bus1[13:20]
-        vader_sentiment = bus1[21]
+        vader_sentiment = bus1[20]
 
 
         sim_score = 0
-        with open('master.csv') as f:
+        with open('master.csv', encoding = 'utf-8') as f:
             reader = csv.reader(f)
+
             for bus2 in reader:
                 business_id2 = bus2[0]
-                lat2 = bus2[7]
-                lon2 = bus2[8]
-                stars2 = bus2[9]
-                rev_count2 = bus2[10]
+                lat2 = float(bus2[7])
+                lon2 = float(bus2[8])
+                stars2 = float(bus2[9])
+                rev_count2 = int(bus2[10])
                 categories2 = bus2[12]
                 hours2 = bus2[13:20]
 
-                distance = calculate_haversine_distance(lon1, lat1, long2, lat2)
+                distance = self.calculate_haversine_distance(lon1, lat1, lon2, lat2)
 
                 if distance < 50 and business_id1 != business_id2:
-                    hours_overlap = hours_overlap(hours1, hours2)
+                    hours_overlap = self.hours_overlap(hours1, hours2)
                     review_count_sim = .3 * (((rev_count1 + rev_count2) - abs(rev_count1 - rev_count2)) / (rev_count1 + rev_count2)) + .7
                     category_sim = .5 * len(set(categories1).intersection(set(categories2))) / min(len(categories1), len(categories2)) + .5
-                    score = (5 - distance / 10) * ((5 - abs(stars1 - stars2)) / 5) * hours_overlap * review_count_sim
+                    score = (5 - distance / 10) * ((5 - abs(stars1 - stars2)) / 5) * review_count_sim * category_sim
+                    if hours_overlap:
+                        score *= hours_overlap
+                    else:
+                        score *= .75
                     sim_score += score
 
         success_score = stars1 * rev_count1 * vader_sentiment
