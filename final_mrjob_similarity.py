@@ -18,7 +18,7 @@ class MRSimilarityScores(MRJob):
 
     def configure_options(self):
         super(MRSimilarityScores, self).configure_options()
-        self.add_file_option('--businesses', help='path to master.csv')
+        self.add_file_option('--', help='path to master.csv')
 
     def calculate_haversine_distance(lon1, lat1, lon2, lat2):
         """
@@ -117,4 +117,4 @@ class MRSimilarityScores(MRJob):
 
 
 if __name__ == '__main__':
-    MRSuccessScores.run()
+    MRSimilarityScores.run()
