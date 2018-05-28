@@ -11,7 +11,7 @@
 
 # Similarity Score mapreduce code
 
-class MRSimilarityScores(MRJob):
+class MRScores(MRJob):
     '''
     Class for MapReduce work.
     '''
@@ -70,7 +70,7 @@ class MRSimilarityScores(MRJob):
         '''
         Mapper function. Takes in a row from the csv file and pairs it
         with all other business in the file to calculate a similarity score with
-        all other local businesses
+        all other local businesses, also calculates business success
 
         Inputs:
             self: an instance of the MRSuccessScores class
@@ -90,9 +90,10 @@ class MRSimilarityScores(MRJob):
         rev_count1 = bus1[10]
         categories1 = bus1[12]
         hours1 = bus1[13:20]
+        vader_sentiment = bus1[21]
 
 
-        total_score = 0
+        sim_score = 0
         with open('master.csv') as f:
             reader = csv.reader(f)
             for bus2 in reader:
@@ -111,10 +112,12 @@ class MRSimilarityScores(MRJob):
                     review_count_sim = .3 * (((rev_count1 + rev_count2) - abs(rev_count1 - rev_count2)) / (rev_count1 + rev_count2)) + .7
                     category_sim = .5 * len(set(categories1).intersection(set(categories2))) / min(len(categories1), len(categories2)) + .5
                     score = (5 - distance / 10) * ((5 - abs(stars1 - stars2)) / 5) * hours_overlap * review_count_sim
-                    total_score += score
+                    sim_score += score
 
-        yield business_id1, total_score
+        success_score = stars1 * rev_count1 * vader_sentiment
+
+        yield business_id1, (sim_score, success_score)
 
 
 if __name__ == '__main__':
-    MRSimilarityScores.run()
+    MRScores.run()
