@@ -15,6 +15,7 @@ class MRAverageSentimentScores(MRJob):
     '''
     OUTPUT_PROTOCOL = protocol.TextProtocol
 
+
     def mapper_init(self):
         self.sia = SentimentIntensityAnalyzer()
 
@@ -70,9 +71,9 @@ class MRAverageSentimentScores(MRJob):
             totals += total
             counts += count
 
-        # avg_score = totals/counts
+        avg_score = totals/counts
 
-        yield business_id, str(totals/counts)
+        yield business_id, str((avg_score + 1) / 2)
 
 
 if __name__ == '__main__':
