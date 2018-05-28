@@ -15,6 +15,7 @@ class MRScores(MRJob):
     '''
     Class for MapReduce work.
     '''
+    OUTPUT_PROTOCOL = protocol.TextProtocol
 
     def configure_options(self):
         super(MRSimilarityScores, self).configure_options()
@@ -116,7 +117,11 @@ class MRScores(MRJob):
 
         success_score = stars1 * rev_count1 * vader_sentiment
 
-        yield business_id1, (sim_score, success_score)
+        yield business_id1, str(sim_score) + '|' + str(success_score)
+
+    def reducer(self, business_id, scores):
+
+        yield None, business_id + '|' + scores
 
 
 if __name__ == '__main__':
