@@ -35,7 +35,7 @@ class MRAverageSentimentScores(MRJob):
         business = next(csv.reader([line]))
         business_id = business[0]
         text = business[5]
-        yield business[0], self.sia.polarity_scores(text)['compound']
+        yield business_id, self.sia.polarity_scores(text)['compound']
 
 
     def combiner(self, business_id, scores):
@@ -70,9 +70,9 @@ class MRAverageSentimentScores(MRJob):
             totals += total
             counts += count
 
-        avg_score = totals/counts
+        # avg_score = totals/counts
 
-        yield business_id, str((avg_score + 1) / 2)
+        yield business_id, totals/counts
 
 
 if __name__ == '__main__':
