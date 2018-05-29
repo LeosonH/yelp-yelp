@@ -125,7 +125,7 @@ class MRScores(MRJob):
                     hours_overlap = self.hours_overlap(hours1, hours2)
                     review_count_sim = 0.3 * (((rev_count1 + rev_count2) - abs(rev_count1 - rev_count2)) / (rev_count1 + rev_count2)) + 0.7
                     category_sim = 0.5 * len(set(categories1).intersection(set(categories2))) / min(len(categories1), len(categories2)) + 0.5
-                    score = (5 - distance / 10) * ((5 - abs(stars1 - stars2)) / 5) * review_count_sim * category_sim
+                    score = 2.718 ** (50 - distance / 10) * ((5 - abs(stars1 - stars2)) / 5) * review_count_sim * category_sim
                     if hours_overlap > 0:
                         score *= hours_overlap
                     else:
