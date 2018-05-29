@@ -15,6 +15,7 @@ Awesome Members:
 * May need to install required packages
 
 ### Log:
+* 5/29/2018: Lots of stuff: Example data, mrjob scripts, how to install packages on Dataproc
 * 5/3/2018: Added json to csv conversion script
 * 4/24/2018: Added some sandbox code
 * 4/17/2018: Added Proposal 
