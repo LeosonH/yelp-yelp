@@ -70,6 +70,9 @@ class MRScores(MRJob):
             both_open = min(h1[day][1] - h2[day][0], h2[day][1] - h1[day][0])
             if both_open > 0:
                 overlap += both_open
+
+        if not h1_hours:
+            return 0
         return overlap / h1_hours
 
     def mapper(self, _, line):
@@ -95,13 +98,13 @@ class MRScores(MRJob):
         rev_count1 = int(bus1[10])
         categories1 = bus1[12]
         hours1 = bus1[13:20]
-        vader_sentiment = bus1[20]
+        vader_sentiment = float(bus1[20])
 
 
         sim_score = 0
         with open('master.csv', encoding = 'utf-8') as f:
             reader = csv.reader(f)
-
+            next(reader)
             for bus2 in reader:
                 business_id2 = bus2[0]
                 lat2 = float(bus2[7])
