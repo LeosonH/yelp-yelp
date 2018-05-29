@@ -109,7 +109,7 @@ class MRScores(MRJob):
 
         with open('small.csv', encoding = 'utf-8') as f:
             reader = csv.reader(f)
-
+            next(reader)
             for bus2 in reader:
                 business_id2 = bus2[0]
                 lat2 = float(bus2[7])
