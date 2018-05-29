@@ -107,7 +107,7 @@ class MRScores(MRJob):
 
         sim_score_total = 0
 
-        with open('small.csv', encoding = 'utf-8') as f:
+        with open('master.csv', encoding = 'utf-8') as f:
             reader = csv.reader(f)
             next(reader)
             for bus2 in reader:
