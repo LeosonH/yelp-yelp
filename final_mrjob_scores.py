@@ -2,12 +2,14 @@
 # Name:        module2
 # Purpose:
 #
-# Author:      alex
+# Author:      alex and Lily
 #
 # Created:     28/05/2018
 # Copyright:   (c) alex 2018
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
+
+# python3 final_mrjob_scores.py --master data/small.csv data/small.csv > data.txt
 
 # Similarity Score mapreduce code
 from mrjob.job import MRJob
@@ -22,9 +24,11 @@ class MRScores(MRJob):
     '''
     OUTPUT_PROTOCOL = protocol.TextProtocol
 
+
     def configure_options(self):
         super(MRScores, self).configure_options()
-        self.add_file_option('--master', help='path to master.csv')
+        self.add_file_option('--master', help='path to small.csv')
+
 
     def calculate_haversine_distance(self, lon1, lat1, lon2, lat2):
         """
@@ -41,8 +45,8 @@ class MRScores(MRJob):
         r = 3956 # radius of earth in miles
         return c * r
 
-    def format_hours(self, input_hours):
 
+    def format_hours(self, input_hours):
         hours = []
         for i in input_hours:
             if re.match(".+:.+", i):
@@ -58,8 +62,8 @@ class MRScores(MRJob):
                 hours.append((0,0))
         return hours
 
-    def hours_overlap(self, hours1, hours2):
 
+    def hours_overlap(self, hours1, hours2):
         h1 = self.format_hours(hours1)
         h2 = self.format_hours(hours2)
 
@@ -70,19 +74,20 @@ class MRScores(MRJob):
             both_open = min(h1[day][1] - h2[day][0], h2[day][1] - h1[day][0])
             if both_open > 0:
                 overlap += both_open
-
-        if not h1_hours:
+        if h1_hours != 0:
+            return overlap / h1_hours
+        else:
             return 0
-        return overlap / h1_hours
+
 
     def mapper(self, _, line):
         '''
         Mapper function. Takes in a row from the csv file and pairs it
         with all other business in the file to calculate a similarity score with
-        all other local businesses, also calculates business success
+        all other local businesses. Also calculates the business's success score
 
         Inputs:
-            self: an instance of the MRSuccessScores class
+            self: an instance of the MRScores class
             _: a dummy placeholder for the key of the pair
             line (str): a row from the csv file
 
@@ -100,9 +105,9 @@ class MRScores(MRJob):
         hours1 = bus1[13:20]
         vader_sentiment = float(bus1[20])
 
+        sim_score_total = 0
 
-        sim_score = 0
-        with open('master.csv', encoding = 'utf-8') as f:
+        with open('small.csv', encoding = 'utf-8') as f:
             reader = csv.reader(f)
             next(reader)
             for bus2 in reader:
@@ -116,25 +121,21 @@ class MRScores(MRJob):
 
                 distance = self.calculate_haversine_distance(lon1, lat1, lon2, lat2)
 
-                if distance < 50 and business_id1 != business_id2:
+                if (distance < 50) and (business_id1 != business_id2):
                     hours_overlap = self.hours_overlap(hours1, hours2)
-                    review_count_sim = .3 * (((rev_count1 + rev_count2) - abs(rev_count1 - rev_count2)) / (rev_count1 + rev_count2)) + .7
-                    category_sim = .5 * len(set(categories1).intersection(set(categories2))) / min(len(categories1), len(categories2)) + .5
+                    review_count_sim = 0.3 * (((rev_count1 + rev_count2) - abs(rev_count1 - rev_count2)) / (rev_count1 + rev_count2)) + 0.7
+                    category_sim = 0.5 * len(set(categories1).intersection(set(categories2))) / min(len(categories1), len(categories2)) + 0.5
                     score = (5 - distance / 10) * ((5 - abs(stars1 - stars2)) / 5) * review_count_sim * category_sim
-                    if hours_overlap:
+                    if hours_overlap > 0:
                         score *= hours_overlap
                     else:
-                        score *= .75
-                    sim_score += score
+                        score *= 0.75
+                    sim_score_total += score
 
         success_score = stars1 * rev_count1 * vader_sentiment
 
-        yield business_id1, str(sim_score) + '|' + str(success_score)
+        yield business_id1, str(sim_score_total) + '\t' + str(success_score)
 
-    def reducer(self, business_id, scores):
-        id = business_id
-        score = scores
-        yield None, id + '|' + score
 
 
 if __name__ == '__main__':
