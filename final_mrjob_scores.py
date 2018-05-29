@@ -132,8 +132,9 @@ class MRScores(MRJob):
         yield business_id1, str(sim_score) + '|' + str(success_score)
 
     def reducer(self, business_id, scores):
-
-        yield None, business_id + '|' + scores
+        id = business_id
+        score = scores
+        yield None, id + '|' + score
 
 
 if __name__ == '__main__':
