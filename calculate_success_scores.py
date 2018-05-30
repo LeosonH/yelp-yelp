@@ -2,16 +2,13 @@
 # Calculate success scores for each business
 # Lily Li
 
-# to save output to csv: python3 calculate_success_scores.py --jobconf mapreduce.job.reduces=1 <data/yelp_business_sample.csv> output.csv
-# to print output to terminal: python3 calculate_success_scores.py --jobconf mapreduce.job.reduces=1 --items data/yelp_business_success_scores_sample.csv --items2 data/yelp_business_similarity_scores_sample.csv data/yelp_business_sample.csv
+# to save output to csv: python3 calculate_success_scores.py data/yelp_business_sample.csv > output.csv
 # helpful link: http://jmedium.com/mapreduce-additionalfile/
 
 
 from mrjob.job import MRJob
 from mrjob import protocol
 import csv
-# from mr3px import csvprotocol
-# use this package to output to csv using a CSV protocol
 
 
 class MRSuccessScores(MRJob):
@@ -19,10 +16,12 @@ class MRSuccessScores(MRJob):
     Class for MapReduce work.
     '''
 
+    OUTPUT_PROTOCOL = protocol.TextProtocol
+
     def configure_options(self):
         super(MRSuccessScores, self).configure_options()
-        self.add_file_option('--items', help='path to yelp_business_success_scores_sample.csv')
-        self.add_file_option('--items2', help='path to yelp_business_similarity_scores_sample.csv') 
+        self.add_file_option('--hours', help='path to yelp_hours_samp.csv')
+        self.add_file_option('--attributes', help='path to yelp_business_attributes_samp.csv') 
 
 
     def mapper(self, _, line):
@@ -48,7 +47,7 @@ class MRSuccessScores(MRJob):
         score = 0
         score2 = 0
 
-        with open('yelp_business_success_scores_sample.csv') as f:
+        with open('yelp_hours_samp.csv') as f:
             for line in f:
                 fields = line.split(',')
                 attr_bus_id = fields[0]
@@ -56,7 +55,7 @@ class MRSuccessScores(MRJob):
                     score = fields[1]
                     break
 
-        with open('yelp_business_similarity_scores_sample.csv') as f:
+        with open('yelp_business_attributes_samp.csv') as f:
             for line in f:
                 fields = line.split(',')
                 attr_bus_id = fields[0]
@@ -65,7 +64,7 @@ class MRSuccessScores(MRJob):
                     break
 
 
-        yield business, (score, score2)
+        yield business_id, str(score)
 
 
 if __name__ == '__main__':
