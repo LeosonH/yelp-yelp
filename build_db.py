@@ -20,10 +20,15 @@ def run():
     business_hours = pd.read_csv("yelp_business_hours.csv")
     business_attributes = pd.read_csv("yelp_business_attributes.csv")
 
-    business.to_sql('business', con = db, flavor = 'sqlite')
-    business_hours.to_sql('business_hours', con = db, flavor = 'sqlite')
+    business.to_sql('business', con = db, flavor = 'sqlite', index = False)
+    business_hours.to_sql('business_hours', con = db, flavor = 'sqlite', \
+    index = False)
     business_attributes.to_sql('business_attributes', con = db, \
-    flavor = 'sqlite')
+    flavor = 'sqlite', index = False)
+
+    scores = pd.read_csv("avg_sentiment_scores_converted.csv", header = None)
+    scores.rename(columns = {0:"business_id", 1:"vader_sentiment"})
+    scores.to_sql('sentiment', con = db, flavor = 'sqlite', index = False)
 
 
 
@@ -36,7 +41,7 @@ def run():
         try:
             review_chunk = review_generator.get_chunk()
             review_chunk.to_sql('review', con = db, flavor = 'sqlite', \
-            if_exists = "append")
+            if_exists = "append", index = False)
         except:
             break
 

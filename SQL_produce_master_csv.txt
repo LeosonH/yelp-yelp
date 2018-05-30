@@ -1,0 +1,40 @@
+#-------------------------------------------------------------------------------
+# Name:        SQL_produce_master_csv
+# Purpose:     Code used in sqlite3 shell to construct single csv file for
+#              computation.
+#
+# Author:      Alex Maiorella
+#-------------------------------------------------------------------------------
+
+sqlite> .open "yelp-dataset/yelp_db.db"
+
+sqlite> CREATE TABLE master
+        AS SELECT * FROM business JOIN business_hours
+        JOIN business_attributes
+        ON business.business_id = business_hours.business_id =
+        business_attributes.business_id;
+
+sqlite> ALTER TABLE "master" RENAME TO "master_old";
+
+sqlite> CREATE TABLE master AS SELECT "business_id", name, neighborhood,
+        address, city, state, postal_code, latitude, longitude, stars,
+        review_count, is_open, categories, monday, tuesday, wednesday,
+        thursday, friday, saturday, sunday FROM master_old;
+
+sqlite> CREATE TABLE master_2 as SELECT * FROM master join sentiment
+        ON master.business_id = sentiment.business_id;
+
+sqlite> .headers on
+
+sqlite> .mode csv
+
+sqlite> .output master.csv
+
+sqlite> SELECT business_id, name, neighborhood, address, city, state,
+        postal_code, latitude, longitude, stars, review_count, is_open,
+        categories, monday, tuesday, wednesday, thursday, friday, saturday,
+        sunday, vader_sentiment FROM master_2;
+
+sqlite> .exit
+
+
