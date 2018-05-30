@@ -45,13 +45,13 @@ class MRAverageSentimentScores(MRJob):
         scores for that business and yields the sum and count of scores.
 
         Inputs:
-            self: an instance of the MRGuestsTenTimes class
-            name (str): the guest's name, the key of the pair
-            scores (generator): the scores for the guest, the value of the pair
+            self: an instance of the MRSentimentScores class
+            business_id (str): the business's id, the key of the pair
+            scores (generator): the scores for the business, the value of the pair
 
         Yield:
-            A key value pair of the guest's name and the sum of the scores for
-            him/her within this combiner
+            A key value pair of the business id and a tuple of the sum and count
+            of scores for the business within this combiner
         '''
         total = 0
         count = 0
@@ -64,6 +64,19 @@ class MRAverageSentimentScores(MRJob):
 
 
     def reducer(self, business_id, totals_and_counts):
+        '''
+        Reducer function. Takes in key value pairs of a business id and scores 
+        and averages the scores
+
+        Inputs:
+            self: an instance of the MRSentimentScores class
+            business_id (str): the business's id, the key of the pair
+            totals_and_counts (generator): the totals and counts of scores,
+                the value of the pair
+
+        Yield:
+            A key value pair of the business id and its average sentiment score
+        '''
         totals = 0
         counts = 0
 
