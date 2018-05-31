@@ -31,12 +31,13 @@ class compute_similar_users(MRJob):
 		query = lsi[text_bow]
 
 		for i in range(len(df)):
-			if pd.isnull(df.iloc[i][1]) == False and df.iloc[i][0] != user:
-				comparison = df.iloc[i][1].lower().split()
+			if pd.isnull(df.iloc[i]["text"]) == False and df.iloc[i]["user_id"] != user:
+				comparison = df.iloc[i]["text"].lower().split()
 				vec_bow = dictionary.doc2bow(comparison)
 				vec_lsi = lsi[vec_bow]
 				sim = cossim(query, vec_lsi)
-				self.l.append((sim, df.iloc[i][0]))
+				self.l.append((sim, df.iloc[i]["user_id"]))
+
 
 		yield max(self.l, key = lambda item:item[0]), user
 
