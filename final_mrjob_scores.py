@@ -6,6 +6,9 @@
 #
 # Created:     28/05/2018
 #-------------------------------------------------------------------------------
+# to run: python3 final_mrjob_scores.py --master /home/student/Downloads/master.csv -r 
+# dataproc --num-core-instances 125 /home/student/Downloads/master6.csv > mrjob_scores6.csv
+
 
 from mrjob.job import MRJob
 from mrjob import protocol
