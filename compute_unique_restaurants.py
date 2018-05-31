@@ -27,12 +27,13 @@ class compute_unique(MRJob):
 					self.s.add(review_restaurant_df.iloc[i][1])
 				if review_restaurant_df.iloc[i]["user_id"] == sim_user:
 					self.s2.add(review_restaurant_df.iloc[i][1])
-					
+
 		# remove overlapping restaurants
 		l3 = [x for x in list(self.s2) if x not in list(self.s)]
 
 		for j in l3:
-			yield (user, sim_user), j
+			for k in self.s:
+				yield (user, sim_user), (j, k)
 
 if __name__ == '__main__':
     compute_unique.run()
