@@ -2,22 +2,29 @@
 # Name:        module1
 # Purpose:
 #
-# Author:      alex, Lily
+# Author:      Alex, Lily
 #
 # Created:     27/05/2018
-# Copyright:   (c) alex 2018
-# Licence:     <your licence>
 #-------------------------------------------------------------------------------
-# Covert MRJOB sentiment score output txt file to csv
-# To run, type in your terminal: python3 filename.csv
+# Coverts MRJOB tab-delimited output csv file to comma-delimited csv file
 # Important note: to be able to run, you should have set your mrjob output to
 # a csv file like so: > filename.csv
+
 import csv
 import argparse
 
 
 def convert_csv(old_csv, new_csv):
+    '''
+    Writes contents of old_csv into new_csv, with proper formatting
 
+    Inputs:
+        old_csv: (file path) mrjob output that is tab-delimited
+        new_csv: (file path) output file
+
+    Returns:
+        Nothing, but new csv is created
+    '''
     with open(old_csv, 'r') as f1:
         with open(new_csv, 'w') as f2:
             reader = csv.reader(f1, delimiter='\t')
@@ -27,7 +34,6 @@ def convert_csv(old_csv, new_csv):
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(
             description='Convert mrjob output csv file to properly delimited csv file',
             )

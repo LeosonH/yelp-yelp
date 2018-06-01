@@ -1,17 +1,15 @@
 #-------------------------------------------------------------------------------
-# Name:        module2
-# Purpose:
+# Name:        final_mrjob_scores
+# Purpose:     Similarity & Success Score mapreduce code
 #
-# Author:      alex and Lily
+# Author(s):   Alex and Lily
 #
 # Created:     28/05/2018
-# Copyright:   (c) alex 2018
-# Licence:     <your licence>
 #-------------------------------------------------------------------------------
+# to run: python3 final_mrjob_scores.py --master /home/student/Downloads/master.csv -r 
+# dataproc --num-core-instances 125 /home/student/Downloads/master6.csv > mrjob_scores6.csv
 
-# python3 final_mrjob_scores.py --master data/small.csv data/small.csv > data.txt
 
-# Similarity Score mapreduce code
 from mrjob.job import MRJob
 from mrjob import protocol
 import csv
@@ -31,9 +29,9 @@ class MRScores(MRJob):
 
 
     def calculate_haversine_distance(self, lon1, lat1, lon2, lat2):
-        """
+        '''
         Calculate the haversine distance in miles between two businesses
-        """
+        '''
         # convert decimal degrees to radians
         lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
@@ -47,6 +45,10 @@ class MRScores(MRJob):
 
 
     def format_hours(self, input_hours):
+        '''
+        Proccesses the business hours and outputs an easier-to-work-with
+        tuple ( open time , close time ) with decimals rather than minutes.
+        '''
         hours = []
         for i in input_hours:
             if re.match(".+:.+", i):
@@ -64,6 +66,10 @@ class MRScores(MRJob):
 
 
     def hours_overlap(self, hours1, hours2):
+        '''
+        For a given two businesses, computes the fraction of time that
+        businesses A and B are open divided by the total time that A is open.
+        '''
         h1 = self.format_hours(hours1)
         h2 = self.format_hours(hours2)
 
@@ -84,7 +90,8 @@ class MRScores(MRJob):
         '''
         Mapper function. Takes in a row from the csv file and pairs it
         with all other business in the file to calculate a similarity score with
-        all other local businesses. Also calculates the business's success score
+        all other local businesses.
+        Also calculates the business's success score.
 
         Inputs:
             self: an instance of the MRScores class
@@ -92,7 +99,7 @@ class MRScores(MRJob):
             line (str): a row from the csv file
 
         Yield:
-            A key value pair of the person's name and their status
+            A key-value pair of the business id & the scores
 
         '''
         bus1 = next(csv.reader([line]))
@@ -122,9 +129,12 @@ class MRScores(MRJob):
 
                 if (distance < 50) and (business_id1 != business_id2):
                     hours_overlap = self.hours_overlap(hours1, hours2)
-                    review_count_sim = 0.3 * (((rev_count1 + rev_count2) - abs(rev_count1 - rev_count2)) / (rev_count1 + rev_count2)) + 0.7
-                    category_sim = 0.5 * len(set(categories1).intersection(set(categories2))) / min(len(categories1), len(categories2)) + 0.5
-                    score = 2.718 ** (5 - distance / 10) * ((5 - abs(stars1 - stars2)) / 5) * review_count_sim * category_sim
+                    review_count_sim = 0.3 * (((rev_count1 + rev_count2) - 
+                        abs(rev_count1 - rev_count2)) / (rev_count1 + rev_count2)) + 0.7
+                    category_sim = 0.5 * len(set(categories1).intersection(set(categories2))) \
+                        / min(len(categories1), len(categories2)) + 0.5
+                    score = 2.718 ** (5 - distance / 10) * ((5 - abs(stars1 - 
+                        stars2)) / 5) * review_count_sim * category_sim
                     if hours_overlap > 0:
                         score *= hours_overlap
                     else:
