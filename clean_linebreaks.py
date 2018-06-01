@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Name:        cleanlinebreaks
 #
-# Author:      Leoson
+# Author:      Leoson, Lily
 #-------------------------------------------------------------------------------
 # Clean csvs to remove newlines from long text fields.
 
