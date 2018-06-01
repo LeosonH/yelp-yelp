@@ -1,11 +1,20 @@
+#-------------------------------------------------------------------------------
+# Name:        cleanlinebreaks
+#
+# Author:      Leoson, Lily
+#-------------------------------------------------------------------------------
+# Clean csvs to remove newlines from long text fields.
+
 import csv
 import argparse
 
 holder_dict = {}
 
 def clean_csv(old_path, new_path):
-	# Clean csvs to remove newlines from long text fields
-
+	'''
+	Clean csvs to remove newlines from long text fields, and outputs to
+	a new csv file.
+	'''
 	with open(old_path, 'r', encoding = 'utf-8') as csvfile:
 		with open(new_path, 'w', encoding='utf-8') as csvfile2:
 			reader = csv.reader(csvfile)
