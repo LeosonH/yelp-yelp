@@ -1,3 +1,12 @@
+#-------------------------------------------------------------------------------
+# Name: create_vector
+#
+# Author: Leoson, Nancy
+#
+#-------------------------------------------------------------------------------
+# Takes the review text in a dataset of yelp reviews, and converts it into a list of 
+# individual useful words to build a dictionary.
+
 import csv
 from mrjob.job import MRJob 
 from mrjob.step import MRStep
@@ -15,8 +24,9 @@ class create_base_vector(MRJob):
         review_list = next(csv.reader([line], delimiter = '|'))
         review_text = review_list[-1]
         biz_id = review_list[1]
-
+        # check for null rows and spaces
         if len(re.findall('.*text$', review_text)) == 0 and not re.match(r'^\s*$', review_text):
+            # remove irrelevant symbols
             doc = re.sub("[^\\w\\s]", "", review_text)
             doc = re.sub(r"\b\d+\b","", doc)
             doc = doc.lower().split()
