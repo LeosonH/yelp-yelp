@@ -17,7 +17,6 @@ import re
 stopw = list(stop_words.ENGLISH_STOP_WORDS)
 stopw.extend(['yelp', 'got', 'does', 'quite','going','just', 'right'])
 
-dictionary = Dictionary()
 l = list()
 
 class create_base_vector(MRJob):
