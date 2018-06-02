@@ -7,6 +7,8 @@
 # Given a dictionary and a dataset of yelp reviews, creates a corpus - a frequency
 # vector of significant word occurences to use as the vector space for documment
 # comparisons.
+#
+# To run: python3 final_mrjob_scores.py -r dataproc --num-core-instances 7 biz_review_cleaned.csv > dict.txt
 
 import gensim
 import csv
