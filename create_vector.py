@@ -13,8 +13,10 @@ from mrjob.step import MRStep
 from sklearn.feature_extraction import stop_words
 import re
 
+# create list of stop words
 stopw = list(stop_words.ENGLISH_STOP_WORDS)
 stopw.extend(['yelp', 'got', 'does', 'quite','going','just', 'right'])
+
 dictionary = Dictionary()
 l = list()
 
@@ -55,9 +57,3 @@ class create_base_vector(MRJob):
 if __name__ == '__main__':
     create_base_vector.run()
     
-
-
-
-
-
-
