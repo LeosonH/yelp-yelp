@@ -4,6 +4,12 @@
 For more information on the Yelp Dataset Challenge please visit http://yelp.com/dataset_challenge
 
 """
+#-------------------------------------------------------------------------------
+# Name: json_to_csv_converter_py3
+#
+# Author: Yelp (Modified by Leoson for Python 3 compatibility)
+#-------------------------------------------------------------------------------
+
 import argparse
 import collections
 import csv
