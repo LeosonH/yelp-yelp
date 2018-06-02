@@ -1,11 +1,3 @@
-import gensim
-import csv
-from mrjob.job import MRJob 
-from mrjob.step import MRStep
-from sklearn.feature_extraction import stop_words
-import re
-from gensim.corpora import Dictionary, MmCorpus
-from mr3px.csvprotocol import CsvProtocol
 #-------------------------------------------------------------------------------
 # Name: create_corpus
 #
@@ -15,6 +7,15 @@ from mr3px.csvprotocol import CsvProtocol
 # Given a dictionary and a dataset of yelp reviews, creates a corpus - a frequency
 # vector of significant word occurences to use as the vector space for documment
 # comparisons.
+
+import gensim
+import csv
+from mrjob.job import MRJob 
+from mrjob.step import MRStep
+from sklearn.feature_extraction import stop_words
+import re
+from gensim.corpora import Dictionary, MmCorpus
+from mr3px.csvprotocol import CsvProtocol
 
 # create list of stop words
 stopw = list(stop_words.ENGLISH_STOP_WORDS)
@@ -62,9 +63,3 @@ class create_corpus(MRJob):
 if __name__ == '__main__':
     create_corpus.run()
     
-
-
-
-
-
-
