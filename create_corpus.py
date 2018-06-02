@@ -6,33 +6,40 @@ from sklearn.feature_extraction import stop_words
 import re
 from gensim.corpora import Dictionary, MmCorpus
 from mr3px.csvprotocol import CsvProtocol
+#-------------------------------------------------------------------------------
+# Name: create_corpus
+#
+# Author: Leoson, Nancy
+#
+#-------------------------------------------------------------------------------
+# Given a dictionary and a dataset of yelp reviews, creates a corpus - a frequency
+# vector of significant word occurences to use as the vector space for documment
+# comparisons.
 
+# create list of stop words
 stopw = list(stop_words.ENGLISH_STOP_WORDS)
 stopw.extend(['yelp', 'got', 'does', 'quite','going','just', 'right'])
+
+# load dictionary
 dictionary = Dictionary.load("biz_review_sub.dict")
+
 class create_corpus(MRJob):
-    #OUTPUT_PROTOCOL = CsvProtocol
     def mapper(self, _, line):
         review_list = list(next(csv.reader([line], delimiter = '|')))
         review_text = review_list[-1]
         review_info = [review_list[1], review_list[6], review_list[7]]
         ind_info = " ".join(review_info)
         if len(re.findall('.*text$', review_text)) == 0 and not re.match(r'^\s*$', review_text):
+            # remove irrelevant symbols
             doc = re.sub("[^\\w\\s]", "", review_text)
             doc = re.sub(r"\b\d+\b","", doc)
             doc = doc.lower().split()
+            # remove stop words
             doc = [x for x in doc if x not in stopw] 
 
             yield ind_info, doc
 
-    #def reducer_init(self):
-        #self.corpus = list()
-
     def reducer(self, ind_info, docs):
-        #for i in list(vec):
-            #self.corpus.append(i)
-        # replace directory path with your own
-        #key = ind_info
         text = [word for doc in docs for word in doc]
         vec = dictionary.doc2bow(text)
         vec = list(vec)
