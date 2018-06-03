@@ -21,7 +21,7 @@ sqlite> CREATE TABLE master AS SELECT "business_id", name, neighborhood,
         review_count, is_open, categories, monday, tuesday, wednesday,
         thursday, friday, saturday, sunday FROM master_old;
 
-sqlite> CREATE TABLE master_2 as SELECT * FROM master join sentiment
+sqlite> CREATE TABLE master_2 as SELECT * FROM master JOIN sentiment
         ON master.business_id = sentiment.business_id;
 
 sqlite> .headers on
