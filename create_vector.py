@@ -23,8 +23,8 @@ class create_base_vector(MRJob):
     def mapper(self, _, line):
         doc = []
         review_list = next(csv.reader([line], delimiter = '|'))
-        review_text = review_list[-1]
-        biz_id = review_list[1]
+        review_text = review_list[1]
+        biz_id = review_list[0]
         # check for null rows and spaces
         if len(re.findall('.*text$', review_text)) == 0 and not re.match(r'^\s*$', review_text):
             # remove irrelevant symbols

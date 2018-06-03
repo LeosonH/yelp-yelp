@@ -17,21 +17,20 @@ from mrjob.step import MRStep
 from sklearn.feature_extraction import stop_words
 import re
 from gensim.corpora import Dictionary, MmCorpus
-from mr3px.csvprotocol import CsvProtocol
 
 # create list of stop words
 stopw = list(stop_words.ENGLISH_STOP_WORDS)
 stopw.extend(['yelp', 'got', 'does', 'quite','going','just', 'right'])
 
 # load dictionary
-dictionary = Dictionary.load("biz_review_sub.dict")
+dictionary = Dictionary.load("reviews_dictionary.dict")
 
 class create_corpus(MRJob):
     def mapper(self, _, line):
         review_list = list(next(csv.reader([line], delimiter = '|')))
-        review_text = review_list[-1]
-        review_info = [review_list[1], review_list[6], review_list[7]]
-        ind_info = " ".join(review_info)
+        review_text = review_list[1]
+        # review_info = [review_list[1], review_list[6], review_list[7]]
+        # ind_info = " ".join(review_info)
         if len(re.findall('.*text$', review_text)) == 0 and not re.match(r'^\s*$', review_text):
             # remove irrelevant symbols
             doc = re.sub("[^\\w\\s]", "", review_text)
@@ -40,9 +39,9 @@ class create_corpus(MRJob):
             # remove stop words
             doc = [x for x in doc if x not in stopw] 
 
-            yield ind_info, doc
+            yield None, doc
 
-    def reducer(self, ind_info, docs):
+    def reducer(self, _, docs):
         text = [word for doc in docs for word in doc]
         vec = dictionary.doc2bow(text)
         vec = list(vec)
@@ -60,7 +59,6 @@ class create_corpus(MRJob):
                 MRStep(reducer = self.reducer_more)
 
         ]
-      
     
 if __name__ == '__main__':
     create_corpus.run()
