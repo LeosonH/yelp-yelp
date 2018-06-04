@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Name: create_vector
+# Name: compute_similar_users
 #
 # Author: Leoson, Nancy
 #
@@ -8,7 +8,9 @@
 # the most similar other user for each user and their similarity scores. The 
 # scores are computed using cosine similarity within an LSI vector space.
 #
-# To run: python3 create_vector.py -r dataproc --num-core-instances 7 [REVIEWS FILENAME] > dict.txt
+# To run: python3 create_similar_users.py --file reviews_dictionary.dict --file 
+# reviews_corpus.mm --file user_vector.txt -r dataproc --instance-type n1-highmem-2 
+# --num-core-instances 7 user_vector.txt > similar_user.txt
 
 from mrjob.job import MRJob
 import csv
@@ -21,22 +23,16 @@ from gensim.matutils import cossim
 import ast 
 
 class compute_similar_users(MRJob):
-	'''
-	Given a pair of datasets of aggregated reviews for each unique user, yield 
-	the most similar other user for each user and their similarity scores.
-
-	The scores are computed using cosine similarity within an LSI vector space.
-	'''
 	def mapper_init(self):
 		'''
         Load required files and models here.
         '''
 		# load prerequisite document vectors and paired dataset
-		self.dictionary = Dictionary.load("biz_review_sub.dict")
-		self.corpus = MmCorpus("user_rest.mm")
+		self.dictionary = Dictionary.load("reviews_dictionary.dict")
+		self.corpus = MmCorpus("reviews_corpus.mm")
 		self.df = pd.read_csv("user_vector.txt", sep = '\t', header = None)
 		# initialize lsi space
-		self.lsi = models.LsiModel(self.corpus, id2word = self.dictionary, num_topics=15)
+		self.lsi = models.LsiModel(self.corpus, id2word = self.dictionary, num_topics=8)
 	
 	def mapper(self, _, line):
 		user_v = next(csv.reader([line], delimiter = "\t"))

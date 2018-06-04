@@ -1,3 +1,15 @@
+#-------------------------------------------------------------------------------
+# Name: compute_unique_restaurants
+#
+# Author: Leoson, Nancy
+#
+#-------------------------------------------------------------------------------
+# Given a dataset of user-paired restaurants, and a dataset of paired most-similar users, 
+# find potential recommendable restaurants for each user and their similarity score and haversine
+# distance.
+#
+# To run: python3 create_vector.py -r dataproc --num-core-instances 7 [REVIEWS FILENAME] > dict.txt
+
 from mrjob.job import MRJob
 import csv
 import re
@@ -10,13 +22,6 @@ from gensim.matutils import cossim
 import numpy as np
 import ast
 
-'''
-dictionary = Dictionary.load("biz_review_sub.dict")
-corpus = MmCorpus("user_rest.mm")
-df = pd.read_csv("user_rest_pair.csv", sep = "|")
-
-lsi = models.LsiModel(corpus, id2word=dictionary, num_topics=15)
-'''
 
 def haversine_distance(restaurant1, restaurant2):
 	'''

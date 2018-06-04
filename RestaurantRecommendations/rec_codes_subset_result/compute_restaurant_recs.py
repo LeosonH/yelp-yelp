@@ -1,3 +1,15 @@
+#-------------------------------------------------------------------------------
+# Name: create_vector
+#
+# Author: Leoson, Nancy
+#
+#-------------------------------------------------------------------------------
+# Given a dataset of user-paired restaurants, and a dataset of paired most-similar users, 
+# find potential recommendable restaurants for each user and their similarity score and haversine
+# distance.
+#
+# To run: python3 create_vector.py -r dataproc --num-core-instances 7 [REVIEWS FILENAME] > dict.txt
+
 from mrjob.job import MRJob
 import csv
 import re
@@ -12,8 +24,6 @@ from mrjob.step import MRStep
 import ast
 
 class compute_recommendations(MRJob):
-	'''
-	'''
 	def mapper(self, _, line):
 		#self.l = list()
 		read_line = next(csv.reader([line], delimiter = "\t"))
@@ -41,6 +51,7 @@ class compute_recommendations(MRJob):
 		sim_mean = np.mean(sim_list)
 		dist_mean = np.mean(dist_list)
 		log_dist_mean = np.log(dist_mean)
+		# applies score formula
 		score = sim_mean/log_dist_mean
 		yield (user, sim_user), (score, sim_rest)
 
