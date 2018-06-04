@@ -9,13 +9,14 @@ from gensim import models, similarities
 from gensim.matutils import cossim
 import numpy as np
 import ast
-#review_restaurant_df = pd.read_csv("vm_test2.csv")
 
+'''
 dictionary = Dictionary.load("biz_review_sub.dict")
 corpus = MmCorpus("user_rest.mm")
 df = pd.read_csv("user_rest_pair.csv", sep = "|")
 
 lsi = models.LsiModel(corpus, id2word=dictionary, num_topics=15)
+'''
 
 def haversine_distance(restaurant1, restaurant2):
 	'''
@@ -44,35 +45,41 @@ class compute_unique(MRJob):
 	Yields the user's id, the most similar user's id, and a recommendable 
 	restaurant from the latter.
 	'''
+	def mapper_init(self):
+		'''
+        Load required files and models here.
+        '''
+		# load prerequisite document vectors and paired dataset
+		self.dictionary = Dictionary.load("reviews_dictionary.dict")
+		self.corpus = MmCorpus("reviews_corpus.mm")
+		self.df = pd.read_csv("user_rest_pair.csv", sep = "|")
+		# initialize lsi space
+		self.lsi = models.LsiModel(self.corpus, id2word = self.dictionary, num_topics=15)
+
 	def mapper(self, _, line):
 		read_line  = list(next(csv.reader([line], delimiter = "\t")))
 		user = read_line[0]
 		sim_user = read_line[1]
 
-		user_df = df[df["user"] == user]
+		user_df = self.df[self.df["user"] == user]
 		user_rest = list(user_df["rest"].values)
-		sim_user_df = df[(df["user"] == sim_user)& (~df["rest"].isin(user_rest))]
+		sim_user_df = self.df[(self.df["user"] == sim_user)& (~self.df["rest"].isin(user_rest))]
 
-		for row1 in user_df.itertuples():
-			rest = row1.rest
-			la = float(row1.la)
-			lon = float(row1.lon)
-			vec  = ast.literal_eval(row1.vec)
-			lsi1 = lsi[vec]
-			for row2 in sim_user_df.itertuples():
-				sim_rest = row2.rest
-				sim_la= float(row2.la)
-				sim_lon = float(row2.lon)
-				sim_vec  = ast.literal_eval(row2.vec)
-				lsi2 = lsi[sim_vec]
+		for i in range(len(user_df)):
+			rest = user_df.iloc[i]["rest"]
+			la = float(user_df.iloc[i]["la"])
+			lon = float(user_df.iloc[i]["lon"])
+			vec  = ast.literal_eval(user_df.iloc[i]["vec"])
+			lsi1 = self.lsi[vec]
+			for j in range(len(sim_user_df)):
+				sim_rest = sim_user_df.iloc[i]["rest"]
+				sim_la= float(sim_user_df.iloc[i]["la"])
+				sim_lon = float(sim_user_df.iloc[i]["lon"])
+				sim_vec  = ast.literal_eval(sim_user_df.iloc[i]["vec"])
+				lsi2 = self.lsi[sim_vec]
 				sim_score = cossim(lsi1, lsi2)
 				dist = haversine_distance((la, lon), (sim_la, sim_lon))
 				yield None, (user, sim_user, rest, sim_rest, sim_score, dist)
-
-
-
-
-
 
 		'''
 		self.s = set()
