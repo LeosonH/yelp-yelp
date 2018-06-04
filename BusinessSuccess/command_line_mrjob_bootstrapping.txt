@@ -1,0 +1,1 @@
+python3 calculate_avg_sentiment_scores.py --bootstrap "sudo apt-get install -y python-pip || sudo yum install -y python-pip" --bootstrap "sudo pip install -U pyyaml nltk" --bootstrap "sudo python -m nltk.downloader -d /usr/share/nltk_data all" -r dataproc --num-core-instances 10 /home/student/Downloads/yelp_review_FULL_cleaned.csv > avg_sentiment_scores.csv
