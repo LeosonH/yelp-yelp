@@ -10,9 +10,15 @@ Awesome Members:
 * [Yuqian Gong (Nancy)](https://github.com/yuqian919)
 * [Leoson Hoay](https://github.com/LeosonH)
 
+### Auxiliary code:
+* json_to_csv_converter_py3.py
+* clean_linebreaks.py
+
+### Using the CSV linebreak cleaner:
+* `python3 clean_linebreaks.py filename`
+
 ### Using the JSON to CSV converter:
-* `python json_to_csv_converter_py3.py filename`
-* May need to install required packages
+* `python3 json_to_csv_converter_py3.py filename`
 
 ### Log:
 * 6/01/2018: Added Final Presentation
