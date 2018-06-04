@@ -3,7 +3,8 @@
 ### Description:
 Outputs restaurant recommendations for users in the dataset.
 
-### Process Documentation:
+
+## Process Documentation:
 
 ### I. Prepare Dictionary and Corpus for Gensim:
 
@@ -42,4 +43,11 @@ python3 compute_unique_restaurants.py -r dataproc --file user_rest_pair.csv --nu
 This takes in user_rest_pair.csv and similar_users.txt to create unique restaurant pairs between each user and their most similar user, along with the similarity and distance scores.
 
 ### IV. Compute recommendations:
+
+```sh
+python3 compute_restaurant_recs.py -r dataproc --num-core-instances 7 user_sim_res_pair.txt > result.txt
+```
+This takes in user_sim_res_pair.txt and implements our recommendation scoring equation. Outputs the most recommendable restaurant from the most similar user for each user along with the score.
+
+
 
