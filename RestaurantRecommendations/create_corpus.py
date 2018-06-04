@@ -8,8 +8,8 @@
 # vector of significant word occurences to use as the vector space for documment
 # comparisons.
 #
-# To run: python3 final_mrjob_scores.py -r dataproc --num-core-instances 7 [REVIEWS FILENAME] 
-# > corpus.txt
+# To run: python3 create_corpus.py -r dataproc --file reviews_dictionary.dict 
+# --num-core-instances 7 [REVIEWS FILENAME] > corpus.txt
 
 import gensim
 import csv
