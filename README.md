@@ -10,6 +10,10 @@ Awesome Members:
 * [Yuqian Gong (Nancy)](https://github.com/yuqian919)
 * [Leoson Hoay](https://github.com/LeosonH)
 
+### Main Folders:
+* BusinessSuccess (Code and Sample Data for Business Success Hypothesis)
+* RestaurantRecommendations (Code and Sample Data for Restaurant Recommendations)
+
 ### Auxiliary code:
 * json_to_csv_converter_py3.py
 * clean_linebreaks.py
