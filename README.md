@@ -26,6 +26,7 @@ Awesome Members:
 * `python3 json_to_csv_converter_py3.py filename`
 
 ### Log:
+* 6/04/2018: Added Final Report and cleaned repository for submission
 * 6/01/2018: Added Final Presentation
 * 5/29/2018: Lots of stuff: Example data, mrjob scripts, how to install packages on Dataproc
 * 5/3/2018: Added json to csv conversion script
