@@ -13,6 +13,7 @@ Awesome Members:
 ### Main Folders:
 * BusinessSuccess (Code and Sample Data for Business Success Hypothesis)
 * RestaurantRecommendations (Code and Sample Data for Restaurant Recommendations)
+* DataExploration (Code during data exploration process)
 
 ### Auxiliary code:
 * json_to_csv_converter_py3.py
