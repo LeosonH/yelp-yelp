@@ -30,6 +30,7 @@ class create_user_vector(MRJob):
 		user_id = review_list[1]
 		review_text = review_list[-1]
 		if len(re.findall('.*text$', review_text)) == 0 and not re.match(r'^\s*$', review_text):
+			# remove unneeded symbols
 			doc = re.sub("[^\\w\\s]", "", review_text)
 			doc = re.sub(r"\b\d+\b","", doc)
 			doc = doc.lower().split()

@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Name: compute_unique_restaurants
 #
-# Author: Leoson, Nancy
+# Author(s): Leoson, Nancy
 #
 #-------------------------------------------------------------------------------
 # Given a dataset of user-paired restaurants, and a dataset of paired most-similar users, 
@@ -75,6 +75,7 @@ class compute_unique(MRJob):
 			rest = user_df.iloc[i]["rest"]
 			la = float(user_df.iloc[i]["la"])
 			lon = float(user_df.iloc[i]["lon"])
+			# strip unneeded symbols
 			vec  = ast.literal_eval(user_df.iloc[i]["vec"])
 			lsi1 = self.lsi[vec]
 			for j in range(len(sim_user_df)):
@@ -86,28 +87,6 @@ class compute_unique(MRJob):
 				sim_score = cossim(lsi1, lsi2)
 				dist = haversine_distance((la, lon), (sim_la, sim_lon))
 				yield None, (user, sim_user, rest, sim_rest, sim_score, dist)
-
-		'''
-		self.s = set()
-		self.s2 = set()
-		read_line = next(csv.reader([line]))
-		sim_user = read_line[1]
-		user = read_line[2]
-
-		for i in range(len(review_restaurant_df)):
-			if pd.isnull(review_restaurant_df.iloc[i]["text"]) == False:
-				if review_restaurant_df.iloc[i]["user_id"] == user:
-					self.s.add(review_restaurant_df.iloc[i][1])
-				if review_restaurant_df.iloc[i]["user_id"] == sim_user:
-					self.s2.add(review_restaurant_df.iloc[i][1])
-
-		# remove overlapping restaurants
-		l3 = [x for x in list(self.s2) if x not in list(self.s)]
-
-		for j in l3:
-			for k in self.s:
-				yield (user, sim_user), (k, j)
-		'''
 
 if __name__ == '__main__':
     compute_unique.run()

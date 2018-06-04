@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Name: compute_similar_users
 #
-# Author: Leoson, Nancy
+# Author(s): Leoson, Nancy
 #
 #-------------------------------------------------------------------------------
 # Given a pair of datasets of aggregated reviews for each unique user, yield 
@@ -37,6 +37,7 @@ class compute_similar_users(MRJob):
 	def mapper(self, _, line):
 		user_v = next(csv.reader([line], delimiter = "\t"))
 		user = user_v[0]
+		# strip unneeded symbols
 		user.strip("\"")
 		user_vec = ast.literal_eval(user_v[1])
 		query = self.lsi[user_vec]

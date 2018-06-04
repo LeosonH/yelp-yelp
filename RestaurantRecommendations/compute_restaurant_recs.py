@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Name: compute_restaurant_recs
 #
-# Author: Leoson, Nancy
+# Author(s): Leoson, Nancy
 #
 #-------------------------------------------------------------------------------
 # Given a dataset of user-pairs and recommendable restaurants, compute the recommendability score
@@ -26,6 +26,7 @@ import ast
 class compute_recommendations(MRJob):
 	def mapper(self, _, line):
 		read_line = next(csv.reader([line], delimiter = "\t"))
+		# strip symbols
 		info = ast.literal_eval(read_line[1])
 		user = info[0]
 		sim_user = info[1]
@@ -63,7 +64,6 @@ class compute_recommendations(MRJob):
 	def steps(self):
 		return[
 				MRStep(mapper = self.mapper,
-					#reducer_init = self.reducer_init,
 					reducer = self.reducer_inter),
 				MRStep(reducer = self.reducer_final)
 		]

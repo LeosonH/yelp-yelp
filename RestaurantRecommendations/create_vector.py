@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Name: create_vector
 #
-# Author: Leoson, Nancy
+# Author(s): Leoson, Nancy
 #
 #-------------------------------------------------------------------------------
 # Takes the review text in a dataset of yelp reviews, and converts it into a list of 

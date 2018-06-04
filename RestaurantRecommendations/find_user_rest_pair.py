@@ -40,6 +40,7 @@ class create_user_rest_pair(MRJob):
 		la = review_list[-2]
 		lon = review_list[-3]
 		if len(re.findall('.*text$', review_text)) == 0 and not re.match(r'^\s*$', review_text):
+			# remove irrelevant symbols
 			doc = re.sub("[^\\w\\s]", "", review_text)
 			doc = re.sub(r"\b\d+\b","", doc)
 			doc = doc.lower().split()

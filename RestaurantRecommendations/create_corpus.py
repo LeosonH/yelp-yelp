@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Name: create_corpus
 #
-# Author: Leoson, Nancy
+# Author(s): Leoson, Nancy
 #
 #-------------------------------------------------------------------------------
 # Given a dictionary and a dataset of yelp reviews, creates a corpus - a frequency
