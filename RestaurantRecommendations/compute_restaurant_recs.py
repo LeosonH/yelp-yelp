@@ -58,8 +58,7 @@ class compute_recommendations(MRJob):
 		user = info[0]
 		sim_user = info[1]
 		value = list(value)
-		value.sort(reverse = True)
-		yield(user, sim_user), value[0]
+		yield(user, sim_user), max(value)
 
 	def steps(self):
 		return[

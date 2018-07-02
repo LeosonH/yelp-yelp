@@ -79,10 +79,10 @@ class compute_unique(MRJob):
 			vec  = ast.literal_eval(user_df.iloc[i]["vec"])
 			lsi1 = self.lsi[vec]
 			for j in range(len(sim_user_df)):
-				sim_rest = sim_user_df.iloc[i]["rest"]
-				sim_la= float(sim_user_df.iloc[i]["la"])
-				sim_lon = float(sim_user_df.iloc[i]["lon"])
-				sim_vec  = ast.literal_eval(sim_user_df.iloc[i]["vec"])
+				sim_rest = sim_user_df.iloc[j]["rest"]
+				sim_la= float(sim_user_df.iloc[j]["la"])
+				sim_lon = float(sim_user_df.iloc[j]["lon"])
+				sim_vec  = ast.literal_eval(sim_user_df.iloc[j]["vec"])
 				lsi2 = self.lsi[sim_vec]
 				sim_score = cossim(lsi1, lsi2)
 				dist = haversine_distance((la, lon), (sim_la, sim_lon))
