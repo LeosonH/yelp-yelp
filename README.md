@@ -5,7 +5,7 @@
 <br>
 
 Awesome Members:
-* [Lily Li](https://github.com/mouyun-lily-li)
+* [Lily Li](https://github.com/lilyli)
 * [Alex Maiorella](https://github.com/donkeyteethUX)
 * [Yuqian Gong (Nancy)](https://github.com/yuqian919)
 * [Leoson Hoay](https://github.com/LeosonH)
