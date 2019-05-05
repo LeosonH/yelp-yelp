@@ -16,7 +16,7 @@ Awesome Members:
 * DataExploration (Code during data exploration process)
 
 ### Auxiliary code:
-* json_to_csv_converter_py3.py
+* json_to_csv_py3.py
 * clean_linebreaks.py
 
 ### Using the CSV linebreak cleaner:
