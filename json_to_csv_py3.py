@@ -7,7 +7,10 @@ For more information on the Yelp Dataset Challenge please visit http://yelp.com/
 #-------------------------------------------------------------------------------
 # Name: json_to_csv_converter_py3
 #
-# Author: Yelp (Modified by Leoson for Python 3 compatibility)
+# Author: Yelp 
+#
+# Modifications: Leoson Hoay - Python 3 compatibility, Li Liu - bug fixes 
+# 
 #-------------------------------------------------------------------------------
 
 import argparse
@@ -18,15 +21,17 @@ import simplejson as json
 
 def read_and_write_file(json_file_path, csv_file_path, column_names):
     """Read in the json dataset file and write it out to a csv file, given the column names."""
-    # changed arg to 'w' for Python 3 compatibility, added encoding
-    with open(csv_file_path, 'w', encoding = 'utf8') as fout:
+    # changed arg to 'w' for Python 3 compatibility, added encoding, newline parameters
+    with open(csv_file_path, 'w', encoding = 'utf8', newline = '') as fout:
         csv_file = csv.writer(fout)
         csv_file.writerow(list(column_names))
         # added encoding
         with open(json_file_path, encoding ='utf8') as fin:
             for line in fin:
                 line_contents = json.loads(line)
-                csv_file.writerow(get_row(line_contents, column_names))
+                if line_contents != None:
+                    row = get_row(line_contents, column_names)					    
+                    csv_file.writerow(row)
 
 def get_superset_of_column_names_from_file(json_file_path):
     """Read in the json dataset file and return the superset of column names."""
@@ -93,7 +98,9 @@ def get_nested_value(d, key):
     if base_key not in d:
         return None
     sub_dict = d[base_key]
-    return get_nested_value(sub_dict, sub_key)
+	# Check for None values
+    if sub_dict != None:
+        return get_nested_value(sub_dict, sub_key)
 
 def get_row(line_contents, column_names):
     """Return a csv compatible row given column names and a dict."""
